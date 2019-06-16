@@ -1,4 +1,5 @@
 var ws = null;
+var addNewMessage = null;
 var sendMessage = null;
 var mySpace = function () {
     var Message;
@@ -45,23 +46,28 @@ var mySpace = function () {
             message.draw();
             return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
+        addNewMessage = function (text, sender) {
+            var $messages, message;
+            $messages = $('.messages');
+            message_side = 'left';
+            // message_side = message_side === 'left' ? 'right' : 'left';
+            message = new Message({
+                text: text,
+                message_side: message_side
+            });
+            message.draw();
+            return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+        };
         $('.send_message').click(function (e) {
             ws.send(getMessageText());
-            // return sendMessage(getMessageText());
+            $('.message_input').val('');
         });
         $('.message_input').keyup(function (e) {
             if (e.which === 13) {
                 ws.send(getMessageText());
-                // return sendMessage(getMessageText());
+                $('.message_input').val('');
             }
         });
-        // sendMessage('Hello Philip! :)');
-        // setTimeout(function () {
-        //     return sendMessage('Hi Sandy! How are you?');
-        // }, 1000);
-        // return setTimeout(function () {
-        //     return sendMessage('I\'m fine, thank you!');
-        // }, 2000);
     });
 }.call(this);
 
@@ -75,25 +81,9 @@ function init() {
             console.log("Connection is closed");
         }
         ws.onmessage = function(msg) {
-            // var element = document.createElement("div");
-            // element.appendChild(document.createTextNode(msg.data));
-            // document.getElementById('display').appendChild(element);
-            sendMessage(msg.data, 'other');
+            addNewMessage(msg.data, 'other');
         }
     } else {
-        alert('Your browser doenst support WebSocket!');
-    }
-}
-
-function send() {
-    ws.send(document.getElementById("txt").value);
-    document.getElementById("txt").value = "";
-}
-
-function isEnter(e) {
-    alert(e.keyCode)
-    if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
-
-        document.getElementById("btnSend").click();
+        alert('Your browser does not support WebSocket!');
     }
 }
