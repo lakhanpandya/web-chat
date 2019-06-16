@@ -9,7 +9,7 @@ define("port", default=8080, type=int)
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("i2.html")
+        self.render("index.html")
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
